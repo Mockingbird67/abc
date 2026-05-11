@@ -1,0 +1,34 @@
+name: Node.js 24/7 Bot Runner
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    # This runs the workflow every 4 hours
+    - cron: '0 */4 * * *'
+  workflow_dispatch: # Allows you to start it manually
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    # Ensures the job stops just before the 4-hour mark 
+    # to avoid overlapping with the next scheduled run
+    timeout-minutes: 235 
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Start Asitha MD
+      run: npm start
